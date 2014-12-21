@@ -1,0 +1,239 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/top_level_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:context="gsajith.daily.EditTaskDialog">
+
+            <FrameLayout
+        android:id="@+id/edit_item"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"
+        android:gravity="center">
+                <RelativeLayout
+                    android:id="@+id/notify_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background"
+                    android:orientation="vertical"
+                    android:layout_marginTop="123dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="3dp"
+                    android:gravity="center">
+                    <View
+                        android:id="@+id/notify_box_border"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@color/checkboxborder"/>
+                    <View
+                        android:id="@+id/notify_box_inside"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@color/background"/>
+                    <TextView
+                        android:layout_toRightOf="@id/notify_box_border"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="18sp"
+                        android:textColor="@color/darkgrey"
+                        android:text="Remind me on selected days"/>
+                </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/day_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background"
+                    android:orientation="vertical"
+                    android:layout_marginTop="67dp"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:id="@+id/day_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/darkgrey"
+                        android:textSize="18sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Select Days"/>
+                    <LinearLayout
+                        android:id="@+id/day_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="15dp"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/day_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/day_selector_1"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="1"/>
+                        <include layout="@layout/day_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/day_selector_2"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="2"/>
+                        <include layout="@layout/day_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/day_selector_3"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="3"/>
+                        <include layout="@layout/day_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/day_selector_4"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="4"/>
+                        <include layout="@layout/day_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/day_selector_5"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="5"/>
+                        <include layout="@layout/day_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/day_selector_6"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="6"/>
+                        <include layout="@layout/day_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/day_selector_7"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="7"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/color_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="13dp"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:id="@+id/color_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/darkgrey"
+                        android:textSize="18sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Select Color"/>
+                    <LinearLayout
+                        android:id="@+id/color_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="15dp"
+                        android:orientation="horizontal">
+                        <include layout="@layout/color_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/color_selector_1"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="1"/>
+                        <include layout="@layout/color_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/color_selector_2"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="2"/>
+                        <include layout="@layout/color_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/color_selector_3"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="3"/>
+                        <include layout="@layout/color_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/color_selector_4"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="4"/>
+                        <include layout="@layout/color_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/color_selector_5"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="5"/>
+                        <include layout="@layout/color_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/color_selector_6"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="6"/>
+                        <include layout="@layout/color_select_item"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:id="@+id/color_selector_7"
+                                 android:layout_marginRight="6dp"
+                                 android:tag="7"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/name_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="100dp"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:id="@+id/name_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/darkgrey"
+                        android:textSize="18sp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Daily Name"/>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_boxbg"
+                        android:padding="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp">
+                        <EditText
+                            android:id="@+id/name_enter"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="13dp"
+                            android:textColorHint="@color/draghandle"
+                            android:hint="Enter what you want to do here"
+                            android:lines="1"
+                            android:textSize="15sp"
+                            android:background="@drawable/rounded_edittext"
+                            android:inputType="text"/>
+                    </FrameLayout>
+
+                </LinearLayout>
+
+        <include layout="@layout/checklist_item"
+                 android:id="@+id/checklist_item"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center"
+            android:layout_marginBottom="168dp"/>
+    </FrameLayout>
+
+</RelativeLayout>

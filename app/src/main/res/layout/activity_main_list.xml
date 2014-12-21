@@ -1,0 +1,67 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".MainListActivity">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/checkboxborder"/>
+    <RelativeLayout
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="25dp"
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/empty_cat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/empty"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="100dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/empty_cat"
+            android:id="@+id/frameLayout">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingRight="8dp"
+                android:paddingLeft="0dp"
+                android:clickable="true"
+                android:text="+  Add it now!"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:onClick="addTask"
+                android:textSize="20sp"
+                android:background="@drawable/create_button"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@color/orangeshadow"
+                />
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="60dp"
+                android:layout_gravity="right|bottom"
+                android:background="@color/orangeshadow"
+                />
+
+            </FrameLayout>
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/main_list"/>
+
+    <include android:id="@+id/undo_banner" layout="@layout/undo_banner" />
+</FrameLayout>

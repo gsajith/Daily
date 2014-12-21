@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="35dp"
+                android:background="@drawable/undo_button"
+                android:layout_gravity="bottom"
+                android:alpha="0.8"
+                android:visibility="gone"
+                android:onClick="undo">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/undo_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:src="@drawable/undo_icon"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/undo_arrow"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            android:text="Undo last removal"/>
+        </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/redshadow"
+        />
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="35dp"
+        android:layout_gravity="right|bottom"
+        android:background="@color/redshadow"
+        />
+
+</FrameLayout>

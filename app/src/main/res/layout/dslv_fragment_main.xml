@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gsajith.daily.DragSortListView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dslv="http://schemas.android.com/apk/res-auto"
+    android:id="@android:id/list"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:dividerHeight="10dp"
+    android:divider="@color/background"
+    android:paddingRight="6dp"
+    android:paddingLeft="6dp"
+    android:paddingTop="9dp"
+    android:paddingBottom="0dp"
+    android:scrollbarStyle="outsideOverlay"
+    dslv:drag_enabled="true"
+    dslv:collapsed_height="2dp"
+    dslv:drag_scroll_start="0.33"
+    dslv:max_drag_scroll_speed="0.5"
+    dslv:float_alpha="0.5"
+    dslv:slide_shuffle_speed="0.3"
+    dslv:track_drag_sort="false"
+    dslv:use_default_controller="false" />

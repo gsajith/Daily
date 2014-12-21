@@ -1,0 +1,60 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".TitleActivity">
+
+    <ImageView
+        android:id="@+id/titlebgs"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/dailysplash"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="50dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/dailysplashlogo"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="150dp"
+        android:textColor="#ffffff"
+        android:text="Catalogue daily tasks and\nschedule reminders for them!"
+        android:textSize="20sp"
+        android:gravity="center"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@drawable/start_button"
+        android:text="Start your Dailies!"
+        android:textColor="#ffffff"
+        android:textSize="25sp"
+        android:onClick="startApp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/lightgreenshadow"
+        />
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="60dp"
+        android:layout_gravity="right|bottom"
+        android:background="@color/lightgreenshadow"
+        />
+
+
+</FrameLayout>

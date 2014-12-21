@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#eeeeee</color>
+    <color name="checkedoverlay">#44000000</color>
+    <color name="draghandle">#29000000</color>
+    <color name="checkboxbg">#dadada</color>
+    <color name="checkboxborder">#9d9d9d</color>
+    <color name="darkgrey">#707070</color>
+    <!-- List item colors -->
+    <color name="blue">#5268b3</color>
+    <color name="blueshadow">#344274</color>
+    <color name="lightblue">#60dfe5</color>
+    <color name="lightblueshadow">#47a3a7</color>
+    <color name="lightgreen">#96e492</color>
+    <color name="lightgreenshadow">#689c65</color>
+    <color name="yellow">#ffe181</color>
+    <color name="yellowshadow">#b6a15e</color>
+    <color name="orange">#fdb458</color>
+    <color name="orangeshadow">#ac7837</color>
+    <color name="red">#ff4e50</color>
+    <color name="redshadow">#a53839</color>
+    <color name="purple">#cc749c</color>
+    <color name="purpleshadow">#834a64</color>
+
+    <color name="white">#ffffff</color>
+    <color name="halfwhite">#66ffffff</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>
