@@ -79,7 +79,12 @@ public class MainListActivity extends FragmentActivity {
   }
 
   public void addTask(View view) {
-    mDSLV.newTask();
+    if (mDSLV != null) {
+      mDSLV.newTask();
+      if (mDSLV.canUndo()) {
+        showUndo();
+      }
+    }
   }
 
   public void clearNew() {

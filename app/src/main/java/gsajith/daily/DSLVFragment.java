@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,17 +82,6 @@ public class DSLVFragment extends ListFragment {
   public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
     int x = random.nextInt(clazz.getEnumConstants().length);
     return clazz.getEnumConstants()[x];
-  }
-
-  public static DSLVFragment newInstance(int headers, int footers) {
-    DSLVFragment f = new DSLVFragment();
-
-    Bundle args = new Bundle();
-    args.putInt("headers", headers);
-    args.putInt("footers", footers);
-    f.setArguments(args);
-
-    return f;
   }
 
   public void updateStorage() {
@@ -184,6 +174,8 @@ public class DSLVFragment extends ListFragment {
     adapter = new DragSortListAdapter(getActivity(), list, DSLVFragment.this);
     if (list.isEmpty()) {
       adapter.showEmptyPage(getActivity());
+    } else {
+      adapter.hideEmptyPage(getActivity());
     }
     setListAdapter(adapter);
   }
