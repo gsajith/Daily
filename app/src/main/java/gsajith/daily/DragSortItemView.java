@@ -1,11 +1,11 @@
 package gsajith.daily;
 
 
-  import android.content.Context;
-  import android.view.Gravity;
-  import android.view.View;
-  import android.view.ViewGroup;
-  import android.widget.AbsListView;
+import android.content.Context;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 /**
  * Lightweight ViewGroup that wraps list items obtained from user's
@@ -17,8 +17,8 @@ package gsajith.daily;
  * to the child, and the ItemView measured width is set to the
  * child's measured width). The height of ItemView can be anything;
  * the
- *
- *
+ * <p/>
+ * <p/>
  * The purpose of this class is to optimize slide
  * shuffle animations.
  */
@@ -33,16 +33,14 @@ public class DragSortItemView extends ViewGroup {
     setLayoutParams(new AbsListView.LayoutParams(
       ViewGroup.LayoutParams.FILL_PARENT,
       ViewGroup.LayoutParams.WRAP_CONTENT));
-
-    //setClipChildren(true);
-  }
-
-  public void setGravity(int gravity) {
-    mGravity = gravity;
   }
 
   public int getGravity() {
     return mGravity;
+  }
+
+  public void setGravity(int gravity) {
+    mGravity = gravity;
   }
 
   @Override
@@ -60,9 +58,6 @@ public class DragSortItemView extends ViewGroup {
     }
   }
 
-  /**
-   *
-   */
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 

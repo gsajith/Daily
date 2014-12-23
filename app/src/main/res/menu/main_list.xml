@@ -7,9 +7,9 @@
           android:title="@string/action_add"
           android:orderInCategory="100"
           android:showAsAction="ifRoom" />
-    <item android:id="@+id/action_settings"
-          android:icon="@drawable/settingsicon"
-        android:title="@string/action_settings"
-        android:orderInCategory="101"
-        android:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_clear"
+          android:title="@string/action_clear"
+          android:orderInCategory="101"
+          android:showAsAction="never" />
 </menu>

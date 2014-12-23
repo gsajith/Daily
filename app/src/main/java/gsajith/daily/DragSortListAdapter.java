@@ -3,7 +3,6 @@ package gsajith.daily;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,9 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -24,18 +21,19 @@ import java.util.List;
  * Created by gsajith on 10/19/2014.
  */
 public class DragSortListAdapter extends BaseAdapter {
+  public final DSLVFragment parent;
   private final List<ListItemModel> checklist;
   private final Activity context;
-  private LayoutInflater inflater;
   private final String PACKAGE = "DSLA";
   public boolean dialogClickEnabled = true;
-
   FragmentManager fm;
+  private LayoutInflater inflater;
 
-  public DragSortListAdapter(Activity context, List<ListItemModel> list) {
+  public DragSortListAdapter(Activity context, List<ListItemModel> list, DSLVFragment parent) {
     this.context = context;
     fm = context.getFragmentManager();
     this.checklist = list;
+    this.parent = parent;
   }
 
   @Override
@@ -73,6 +71,7 @@ public class DragSortListAdapter extends BaseAdapter {
       emptyPage.setVisibility(View.GONE);
     }
   }
+
   @Override
   public View getView(final int position, View convertView, ViewGroup parent) {
     if (inflater == null) {
@@ -93,7 +92,7 @@ public class DragSortListAdapter extends BaseAdapter {
     View checkSmallShadow = convertView.findViewById(R.id.checksmallshadow);
 
     checkBox.setTag(checklist.get(position));
-    checkBox.setOnClickListener(new View.OnClickListener(){
+    checkBox.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         ListItemModel item = (ListItemModel) view.getTag();
@@ -110,7 +109,7 @@ public class DragSortListAdapter extends BaseAdapter {
     ListItemModel.Color c = m.getColor();
     final int mainColor;
     final int shadowColor;
-    switch(c) {
+    switch (c) {
       case LIGHTBLUE:
         mainColor = R.color.lightblue;
         shadowColor = R.color.lightblueshadow;
@@ -156,6 +155,7 @@ public class DragSortListAdapter extends BaseAdapter {
     checkSmallShadow.setBackgroundColor(context.getResources().getColor(shadowColor));
     View mainBox = convertView.findViewById(R.id.mainview);
     View editButton = convertView.findViewById(R.id.editbutton);
+    View notifyIcon = convertView.findViewById(R.id.notify_icon);
     mainBox.setBackgroundColor(context.getResources().getColor(mainColor));
     checkBig.setBackgroundColor(context.getResources().getColor(mainColor));
     checkSmall.setBackgroundColor(context.getResources().getColor(mainColor));
@@ -169,14 +169,14 @@ public class DragSortListAdapter extends BaseAdapter {
           finalConvertView.getLocationOnScreen(screenLocation);
           Bundle bundle = new Bundle();
           bundle.putInt(PACKAGE + ".left", screenLocation[0]);
-          bundle.putInt(PACKAGE+".top", screenLocation[1]);
-          bundle.putInt(PACKAGE+".mainColor", mainColor);
-          bundle.putInt(PACKAGE+".shadowColor", shadowColor);
+          bundle.putInt(PACKAGE + ".top", screenLocation[1]);
+          bundle.putInt(PACKAGE + ".mainColor", mainColor);
+          bundle.putInt(PACKAGE + ".shadowColor", shadowColor);
           bundle.putString(PACKAGE + ".name", m.getName());
           bundle.putBoolean(PACKAGE + ".done", m.isDone());
-          bundle.putInt(PACKAGE+".itemNumber", position);
-          bundle.putBooleanArray(PACKAGE+".daysChecked", m.getDays());
-          bundle.putBoolean(PACKAGE+".notify", m.shouldNotify());
+          bundle.putInt(PACKAGE + ".itemNumber", position);
+          bundle.putBooleanArray(PACKAGE + ".daysChecked", m.getDays());
+          bundle.putBoolean(PACKAGE + ".notify", m.shouldNotify());
           EditTaskDialog dialog = new EditTaskDialog(bundle, DragSortListAdapter.this);
           dialog.show(fm, "Dialog fragment");
         }
@@ -184,6 +184,11 @@ public class DragSortListAdapter extends BaseAdapter {
     });
     nameView.setText(m.getName());
     updateDays(dayList, m.getDays());
+    if (m.shouldNotify()) {
+      notifyIcon.setAlpha(1);
+    } else {
+      notifyIcon.setAlpha(0.25f);
+    }
     if (m.isDone()) {
       checked.setVisibility(View.VISIBLE);
       checkedOverlay.setVisibility(View.VISIBLE);
@@ -198,11 +203,11 @@ public class DragSortListAdapter extends BaseAdapter {
   private void updateDays(LinearLayout dayList, boolean[] days) {
     for (int i = 0; i < days.length; i++) {
       if (days[i]) {
-        ((TextView)dayList.getChildAt(i)).setTextColor(
+        ((TextView) dayList.getChildAt(i)).setTextColor(
           context.getResources().getColor(R.color.white)
         );
       } else {
-        ((TextView)dayList.getChildAt(i)).setTextColor(
+        ((TextView) dayList.getChildAt(i)).setTextColor(
           context.getResources().getColor(R.color.halfwhite)
         );
       }
@@ -218,4 +223,5 @@ public class DragSortListAdapter extends BaseAdapter {
     this.getItem(itemNum).setVisible(false);
     notifyDataSetChanged();
   }
+
 }

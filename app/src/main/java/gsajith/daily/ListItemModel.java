@@ -8,42 +8,68 @@ import java.util.List;
  */
 public class ListItemModel {
 
-  public enum Color {
-    DARKBLUE,
-    LIGHTBLUE,
-    LIGHTGREEN,
-    YELLOW,
-    ORANGE,
-    RED,
-    PURPLE
-  }
   private String dailyName;
   private boolean done;
   private boolean isVisible = true;
   private boolean notify = false;
   private Color color;
   private List<Boolean> daysEnabled;
-
-  public ListItemModel(String name, boolean done, boolean notify, Color c, List<Boolean> days) {
+  private int ID;
+  public ListItemModel(String name, boolean done, boolean notify, Color c, List<Boolean> days, int id) {
     dailyName = name;
     this.done = done;
     this.notify = notify;
     color = c;
     daysEnabled = days;
+    ID = id;
   }
 
   public String getName() {
     return dailyName;
   }
 
+  public void setName(String name) {
+    dailyName = name;
+  }
+
+  public String getDaysString() {
+    String ret = "";
+    for (int i = 0; i < daysEnabled.size(); i++) {
+      if (daysEnabled.get(i)) {
+        ret += "1";
+      } else {
+        ret += "0";
+      }
+    }
+    return ret;
+  }
+
   public boolean isDone() {
     return done;
   }
 
-  public boolean shouldNotify() { return notify; }
+  public void setDone(boolean done) {
+    this.done = done;
+  }
+
+  public boolean shouldNotify() {
+    return notify;
+  }
 
   public Color getColor() {
     return color;
+  }
+
+  public void setColor(Color c) {
+    color = c;
+  }
+
+  public int getID() {
+    return ID;
+  }
+
+  public void setID(int id) {
+    ID = id;
   }
 
   public boolean[] getDays() {
@@ -67,18 +93,8 @@ public class ListItemModel {
     return daysEnabled.get(day);
   }
 
-  public void setName(String name) {
-    dailyName = name;
-  }
-
-  public void setDone(boolean done) {
-    this.done = done;
-  }
-
-  public void setNotify(boolean notify) {this.notify = notify; }
-
-  public void setColor(Color c) {
-    color = c;
+  public void setNotify(boolean notify) {
+    this.notify = notify;
   }
 
   public void setEnabledOn(int day, boolean enabled) {
@@ -89,11 +105,21 @@ public class ListItemModel {
     daysEnabled.set(day, enabled);
   }
 
+  public boolean isVisible() {
+    return isVisible;
+  }
+
   public void setVisible(boolean visible) {
     isVisible = visible;
   }
 
-  public boolean isVisible() {
-    return isVisible;
+  public enum Color {
+    DARKBLUE,
+    LIGHTBLUE,
+    LIGHTGREEN,
+    YELLOW,
+    ORANGE,
+    RED,
+    PURPLE
   }
 }

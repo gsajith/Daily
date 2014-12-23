@@ -1,24 +1,13 @@
 package gsajith.daily;
 
 
-  import android.view.View;
-  import android.widget.AdapterView;
-  import android.widget.ListView;
-  import android.os.Bundle;
-  import android.widget.Toast;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 public class DSLVFragmentClicks extends DSLVFragment {
-
-  public static DSLVFragmentClicks newInstance(int headers, int footers) {
-    DSLVFragmentClicks f = new DSLVFragmentClicks();
-
-    Bundle args = new Bundle();
-    args.putInt("headers", headers);
-    args.putInt("footers", footers);
-    f.setArguments(args);
-
-    return f;
-  }
 
   AdapterView.OnItemLongClickListener mLongClickListener =
     new AdapterView.OnItemLongClickListener() {
@@ -30,6 +19,17 @@ public class DSLVFragmentClicks extends DSLVFragment {
         return true;
       }
     };
+
+  public static DSLVFragmentClicks newInstance(int headers, int footers) {
+    DSLVFragmentClicks f = new DSLVFragmentClicks();
+
+    Bundle args = new Bundle();
+    args.putInt("headers", headers);
+    args.putInt("footers", footers);
+    f.setArguments(args);
+
+    return f;
+  }
 
   @Override
   public void onActivityCreated(Bundle savedState) {

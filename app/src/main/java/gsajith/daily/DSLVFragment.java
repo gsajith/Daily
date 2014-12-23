@@ -1,25 +1,34 @@
 package gsajith.daily;
-  import java.util.ArrayList;
-  import java.util.List;
-  import java.util.Stack;
-  import java.util.concurrent.Executors;
-  import java.util.concurrent.ScheduledExecutorService;
-  import java.util.concurrent.TimeUnit;
 
-  import android.support.v4.app.ListFragment;
-  import android.util.Pair;
-  import android.view.View;
-  import android.view.ViewGroup;
-  import android.view.LayoutInflater;
-  import android.os.Bundle;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.util.Pair;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Stack;
 
 public class DSLVFragment extends ListFragment {
-
+  private static final SecureRandom random = new SecureRandom();
+  public int dragStartMode = DragSortController.ON_DOWN;
+  public boolean removeEnabled = true;
+  public int removeMode = DragSortController.FLING_REMOVE;
+  public boolean sortEnabled = true;
+  public boolean dragEnabled = true;
   DragSortListAdapter adapter;
-
   private ArrayList<ListItemModel> list;
   private Stack<Pair<ListItemModel, Integer>> undoStack;
-
+  private List<Boolean> daysEnabled;
   private DragSortListView.DropListener onDrop =
     new DragSortListView.DropListener() {
       @Override
@@ -27,25 +36,28 @@ public class DSLVFragment extends ListFragment {
         if (from != to) {
           ListItemModel item = adapter.getItem(from);
           list.remove(item);
+          item.setID(to);
           list.add(to, item);
           adapter.notifyDataSetChanged();
+          updateStorage();
         }
       }
     };
-
   private DragSortListView.RemoveListener onRemove =
     new DragSortListView.RemoveListener() {
       @Override
-      public void remove(int which) {
-        undoStack.push(new Pair(adapter.getItem(which), which));
+      public void remove(int which, boolean shouldUndo) {
+        if (shouldUndo) {
+          undoStack.push(new Pair(adapter.getItem(which), which));
+        }
         list.remove(adapter.getItem(which));
         if (list.isEmpty()) {
           adapter.showEmptyPage(getActivity());
         }
         adapter.notifyDataSetChanged();
+        updateStorage();
       }
     };
-
   private DragSortListView.UndoListener onUndo = new DragSortListView.UndoListener() {
     @Override
     public void undo() {
@@ -56,11 +68,41 @@ public class DSLVFragment extends ListFragment {
         Pair<ListItemModel, Integer> top = undoStack.pop();
         ListItemModel item = top.first;
         int to = top.second;
+        item.setID(to);
         list.add(to, item);
         adapter.notifyDataSetChanged();
+        updateStorage();
       }
     }
   };
+  private DragSortListView mDslv;
+  private DragSortController mController;
+
+  public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
+    int x = random.nextInt(clazz.getEnumConstants().length);
+    return clazz.getEnumConstants()[x];
+  }
+
+  public static DSLVFragment newInstance(int headers, int footers) {
+    DSLVFragment f = new DSLVFragment();
+
+    Bundle args = new Bundle();
+    args.putInt("headers", headers);
+    args.putInt("footers", footers);
+    f.setArguments(args);
+
+    return f;
+  }
+
+  public void updateStorage() {
+    GsonBuilder gsonb = new GsonBuilder();
+    Gson gson = gsonb.create();
+    String value = gson.toJson(list);
+    SharedPreferences prefs = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
+    SharedPreferences.Editor e = prefs.edit();
+    e.putString("list", value);
+    e.commit();
+  }
 
   public boolean canUndo() {
     return !undoStack.isEmpty();
@@ -77,6 +119,24 @@ public class DSLVFragment extends ListFragment {
     return R.layout.dslv_fragment_main;
   }
 
+  public void newTask() {
+    if (list.isEmpty()) {
+      adapter.hideEmptyPage(getActivity());
+    }
+    ListItemModel item = new ListItemModel("New Daily - tap to edit", false, false, randomEnum(ListItemModel.Color.class), daysEnabled, 0);
+    list.add(0, item);
+    adapter.notifyDataSetChanged();
+    updateStorage();
+  }
+
+  public void clearNew() {
+    for (int i = list.size() - 1; i >= 0; i--) {
+      if (list.get(i).getName().equals("New Daily - tap to edit")) {
+        onRemove.remove(i, false);
+      }
+    }
+  }
+
   /**
    * Return list item layout resource passed to the ArrayAdapter.
    */
@@ -84,27 +144,7 @@ public class DSLVFragment extends ListFragment {
         /*if (removeMode == DragSortController.FLING_LEFT_REMOVE || removeMode == DragSortController.SLIDE_LEFT_REMOVE) {
             return R.layout.list_item_handle_right;
         } else */
-      return R.layout.checklist_item;
-  }
-
-  private DragSortListView mDslv;
-  private DragSortController mController;
-
-  public int dragStartMode = DragSortController.ON_DOWN;
-  public boolean removeEnabled = true;
-  public int removeMode = DragSortController.FLING_REMOVE;
-  public boolean sortEnabled = true;
-  public boolean dragEnabled = true;
-
-  public static DSLVFragment newInstance(int headers, int footers) {
-    DSLVFragment f = new DSLVFragment();
-
-    Bundle args = new Bundle();
-    args.putInt("headers", headers);
-    args.putInt("footers", footers);
-    f.setArguments(args);
-
-    return f;
+    return R.layout.checklist_item;
   }
 
   public DragSortController getController() {
@@ -118,7 +158,7 @@ public class DSLVFragment extends ListFragment {
   public void setListAdapter() {
     list = new ArrayList<ListItemModel>();
     undoStack = new Stack<Pair<ListItemModel, Integer>>();
-    List<Boolean> daysEnabled = new ArrayList<Boolean>();
+    daysEnabled = new ArrayList<Boolean>();
     daysEnabled.add(false);
     daysEnabled.add(false);
     daysEnabled.add(false);
@@ -126,13 +166,22 @@ public class DSLVFragment extends ListFragment {
     daysEnabled.add(false);
     daysEnabled.add(false);
     daysEnabled.add(false);
-    list.add(new ListItemModel("Meditate for 15 minutes", false, false, ListItemModel.Color.LIGHTBLUE, daysEnabled));
-    list.add(new ListItemModel("Practice Chinese", false, false, ListItemModel.Color.LIGHTGREEN, daysEnabled));
-    list.add(new ListItemModel("Practice Spanish", false, false, ListItemModel.Color.LIGHTGREEN, daysEnabled));
-    list.add(new ListItemModel("Eat an apple", false, false, ListItemModel.Color.RED, daysEnabled));
-    list.add(new ListItemModel("Run a mile", false, false, ListItemModel.Color.YELLOW, daysEnabled));
-    list.add(new ListItemModel("Contribute to StackOverflow", true, false, ListItemModel.Color.LIGHTBLUE, daysEnabled));
-    adapter = new DragSortListAdapter(getActivity(), list);
+
+    //***********************
+    // load list from DB
+    // ***********************
+    SharedPreferences prefs = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
+    String value = prefs.getString("list", null);
+    if (value != null) {
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      list.addAll(Arrays.asList(gson.fromJson(value, ListItemModel[].class)));
+    }
+
+    for (int i = 0; i < list.size(); i++) {
+      list.get(i).setVisible(true);
+    }
+    adapter = new DragSortListAdapter(getActivity(), list, DSLVFragment.this);
     if (list.isEmpty()) {
       adapter.showEmptyPage(getActivity());
     }
@@ -159,7 +208,9 @@ public class DSLVFragment extends ListFragment {
   }
 
 
-  /** Called when the activity is first created. */
+  /**
+   * Called when the activity is first created.
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {

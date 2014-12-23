@@ -24,16 +24,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
-        <activity
-            android:name=".EditTaskDialog"
-            android:label="- Add a daily task!"
-            android:screenOrientation="portrait"
-            android:theme="@style/Transparent"
-            android:parentActivityName=".MainListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="gsajith.daily.MainListActivity" />
-        </activity>
     </application>
 
 </manifest>

@@ -18,8 +18,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,15 +28,10 @@ import java.util.ArrayList;
 
 
 public class EditTaskDialog extends DialogFragment {
-  private final String PACKAGE = "DSLA";
   private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
   private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
-  private static final int ANIM_DURATION = 500;
-  private ColorDrawable mBackground = new ColorDrawable(Color.BLACK);
-  private int mLeftDelta = 0;
-  private int mTopDelta = 0;
-  private ArrayList<Boolean> daysChecked;
-  private boolean shouldNotify = false;
+  private static final int ANIM_DURATION = 200;
+  private final String PACKAGE = "DSLA";
   RelativeLayout checkListItem;
   LinearLayout nameForm;
   LinearLayout colorForm;
@@ -45,6 +40,7 @@ public class EditTaskDialog extends DialogFragment {
   LinearLayout colorList;
   LinearLayout dayList;
   LinearLayout dayTextList;
+  LinearLayout submitForm;
   View checkBig;
   View checkSmall;
   View mainBox;
@@ -54,9 +50,18 @@ public class EditTaskDialog extends DialogFragment {
   View checkShadow2;
   View mainShadow1;
   View mainShadow2;
+  Button saveButton;
+  Button cancelButton;
   EditText nameEnter;
   Bundle mBundle;
   DragSortListAdapter mAdapter;
+  private ColorDrawable mBackground = new ColorDrawable(Color.BLACK);
+  private int mLeftDelta = 0;
+  private int mTopDelta = 0;
+  private ArrayList<Boolean> daysChecked;
+  private boolean shouldNotify = false;
+  private boolean[] isDone;
+  private Dialog dialog;
   private int listItemNumber;
   private int selectedColor = 0;
   private int clickedColorID = 0;
@@ -64,6 +69,7 @@ public class EditTaskDialog extends DialogFragment {
   public EditTaskDialog() {
 
   }
+
   public EditTaskDialog(Bundle bundle, DragSortListAdapter adapter) {
     mBundle = bundle;
     mAdapter = adapter;
@@ -80,13 +86,13 @@ public class EditTaskDialog extends DialogFragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+    setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_NoTitleBar);
 
   }
 
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
-    Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog = super.onCreateDialog(savedInstanceState);
     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
     dialog.setOnKeyListener(new Dialog.OnKeyListener() {
       @Override
@@ -115,21 +121,42 @@ public class EditTaskDialog extends DialogFragment {
   }
 
   private int getColorNum(int mainColor) {
-    switch(mainColor) {
-      case((int)R.color.blue):
+    switch (mainColor) {
+      case ((int) R.color.blue):
         return 1;
-      case((int)R.color.lightblue):
+      case ((int) R.color.lightblue):
         return 2;
-      case((int)R.color.lightgreen):
+      case ((int) R.color.lightgreen):
         return 3;
-      case((int)R.color.yellow):
+      case ((int) R.color.yellow):
         return 4;
-      case((int)R.color.orange):
+      case ((int) R.color.orange):
         return 5;
-      case((int)R.color.red):
+      case ((int) R.color.red):
         return 6;
-      case((int)R.color.purple):
+      case ((int) R.color.purple):
         return 7;
+      default:
+        return 1;
+    }
+  }
+
+  private int getSaveButtonDrawable(int mainColor) {
+    switch (mainColor) {
+      case ((int) R.color.blue):
+        return R.drawable.save_button1;
+      case ((int) R.color.lightblue):
+        return R.drawable.save_button2;
+      case ((int) R.color.lightgreen):
+        return R.drawable.save_button3;
+      case ((int) R.color.yellow):
+        return R.drawable.save_button4;
+      case ((int) R.color.orange):
+        return R.drawable.save_button5;
+      case ((int) R.color.red):
+        return R.drawable.save_button6;
+      case ((int) R.color.purple):
+        return R.drawable.save_button7;
       default:
         return 1;
     }
@@ -138,17 +165,17 @@ public class EditTaskDialog extends DialogFragment {
   private void initializeDayList(LinearLayout dayList, LinearLayout dayTextList) {
     for (int i = 0; i < 7; i++) {
       final int finalI = i;
-      Log.e("CHILDNUM", i+"");
+      Log.e("CHILDNUM", i + "");
       if (daysChecked.get(i)) {
         dayList.getChildAt(i).findViewById(R.id.selected_bar).
           setBackgroundColor(getResources().getColor(clickedColorID));
-        ((TextView)dayTextList.getChildAt(i)).setTextColor(
+        ((TextView) dayTextList.getChildAt(i)).setTextColor(
           getResources().getColor(R.color.white)
         );
       } else {
         dayList.getChildAt(i).findViewById(R.id.selected_bar).
           setBackgroundColor(getResources().getColor(R.color.background));
-        ((TextView)dayTextList.getChildAt(i)).setTextColor(
+        ((TextView) dayTextList.getChildAt(i)).setTextColor(
           getResources().getColor(R.color.halfwhite)
         );
       }
@@ -159,24 +186,24 @@ public class EditTaskDialog extends DialogFragment {
         }
       });
     }
-    ((TextView)dayList.getChildAt(0).findViewById(R.id.selected_box)).setText("S");
-    ((TextView)dayList.getChildAt(1).findViewById(R.id.selected_box)).setText("M");
-    ((TextView)dayList.getChildAt(2).findViewById(R.id.selected_box)).setText("T");
-    ((TextView)dayList.getChildAt(3).findViewById(R.id.selected_box)).setText("W");
-    ((TextView)dayList.getChildAt(4).findViewById(R.id.selected_box)).setText("T");
-    ((TextView)dayList.getChildAt(5).findViewById(R.id.selected_box)).setText("F");
-    ((TextView)dayList.getChildAt(6).findViewById(R.id.selected_box)).setText("S");
+    ((TextView) dayList.getChildAt(0).findViewById(R.id.selected_box)).setText("S");
+    ((TextView) dayList.getChildAt(1).findViewById(R.id.selected_box)).setText("M");
+    ((TextView) dayList.getChildAt(2).findViewById(R.id.selected_box)).setText("T");
+    ((TextView) dayList.getChildAt(3).findViewById(R.id.selected_box)).setText("W");
+    ((TextView) dayList.getChildAt(4).findViewById(R.id.selected_box)).setText("T");
+    ((TextView) dayList.getChildAt(5).findViewById(R.id.selected_box)).setText("F");
+    ((TextView) dayList.getChildAt(6).findViewById(R.id.selected_box)).setText("S");
   }
 
   private void updateDayListColor() {
     for (int i = 0; i < 7; i++) {
       if (daysChecked.get(i)) {
-        ((TextView)dayList.getChildAt(i).findViewById(R.id.selected_box)).
+        ((TextView) dayList.getChildAt(i).findViewById(R.id.selected_box)).
           setTextColor(getResources().getColor(clickedColorID));
         dayList.getChildAt(i).findViewById(R.id.selected_bar).
           setBackgroundColor(getResources().getColor(clickedColorID));
       } else {
-        ((TextView)dayList.getChildAt(i).findViewById(R.id.selected_box)).
+        ((TextView) dayList.getChildAt(i).findViewById(R.id.selected_box)).
           setTextColor(getResources().getColor(R.color.checkboxborder));
         dayList.getChildAt(i).findViewById(R.id.selected_bar).
           setBackgroundColor(getResources().getColor(R.color.transparent));
@@ -190,7 +217,7 @@ public class EditTaskDialog extends DialogFragment {
       colorList.getChildAt(i).setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          clickedColor(finalI +1);
+          clickedColor(finalI + 1);
         }
       });
     }
@@ -242,35 +269,35 @@ public class EditTaskDialog extends DialogFragment {
     if (!daysChecked.get(dayNumber - 1)) {
       dayList.getChildAt(dayNumber - 1).findViewById(R.id.selected_bar).
         setBackgroundColor(getResources().getColor(clickedColorID));
-      ((TextView)dayTextList.getChildAt(dayNumber - 1)).setTextColor(
+      ((TextView) dayTextList.getChildAt(dayNumber - 1)).setTextColor(
         getResources().getColor(R.color.white)
       );
       daysChecked.set(dayNumber - 1, true);
     } else {
       dayList.getChildAt(dayNumber - 1).findViewById(R.id.selected_bar).
         setBackgroundColor(getResources().getColor(R.color.background));
-      ((TextView)dayTextList.getChildAt(dayNumber - 1)).setTextColor(
+      ((TextView) dayTextList.getChildAt(dayNumber - 1)).setTextColor(
         getResources().getColor(R.color.halfwhite)
       );
       daysChecked.set(dayNumber - 1, false);
     }
     updateDayListColor();
-    mAdapter.getItem(listItemNumber).setDays(daysChecked);
+    //mAdapter.getItem(listItemNumber).setDays(daysChecked);
   }
 
   public void clickedColor(int colorNumber) {
     if (colorNumber != selectedColor) {
       if (selectedColor != 0) {
-        colorList.getChildAt(selectedColor-1).findViewById(R.id.selected_box).
+        colorList.getChildAt(selectedColor - 1).findViewById(R.id.selected_box).
           setBackgroundColor(getResources().getColor(R.color.background));
       }
-      colorList.getChildAt(colorNumber-1).findViewById(R.id.selected_box).
+      colorList.getChildAt(colorNumber - 1).findViewById(R.id.selected_box).
         setBackgroundColor(getResources().getColor(R.color.checkboxbg));
       selectedColor = colorNumber;
     }
     int mainColor;
     int shadowColor;
-    switch(ListItemModel.Color.values()[selectedColor-1]) {
+    switch (ListItemModel.Color.values()[selectedColor - 1]) {
       case LIGHTBLUE:
         mainColor = R.color.lightblue;
         shadowColor = R.color.lightblueshadow;
@@ -313,15 +340,29 @@ public class EditTaskDialog extends DialogFragment {
     mainBox.setBackgroundColor(getResources().getColor(mainColor));
     checkBig.setBackgroundColor(getResources().getColor(mainColor));
     checkSmall.setBackgroundColor(getResources().getColor(mainColor));
-    mAdapter.getItem(listItemNumber).setColor(ListItemModel.Color.values()[selectedColor - 1]);
+    //mAdapter.getItem(listItemNumber).setColor(ListItemModel.Color.values()[selectedColor - 1]);
     clickedColorID = mainColor;
+    int saveDrawableColor = getSaveButtonDrawable(clickedColorID);
+    saveButton.setBackground(getResources().getDrawable(saveDrawableColor));
+    if (shouldNotify) {
+      notifyForm.findViewById(R.id.notify_box_inside).setBackgroundColor(
+        getResources().getColor(clickedColorID)
+      );
+    } else {
+      notifyForm.findViewById(R.id.notify_box_inside).setBackgroundColor(
+        getResources().getColor(R.color.background)
+      );
+    }
     updateDayListColor();
   }
 
   private void changeData() {
-    mAdapter.getItem(listItemNumber).setColor(ListItemModel.Color.values()[selectedColor-1]);
+    mAdapter.getItem(listItemNumber).setColor(ListItemModel.Color.values()[selectedColor - 1]);
     mAdapter.getItem(listItemNumber).setName(nameEnter.getText().toString());
     mAdapter.getItem(listItemNumber).setDays(daysChecked);
+    mAdapter.getItem(listItemNumber).setDone(isDone[0]);
+    mAdapter.getItem(listItemNumber).setNotify(shouldNotify);
+    mAdapter.parent.updateStorage();
   }
 
   @Override
@@ -339,37 +380,40 @@ public class EditTaskDialog extends DialogFragment {
     final TextView nameView = (TextView) rootView.findViewById(R.id.nameText);
     final View checked = rootView.findViewById(R.id.checked);
     final View checkedOverlay = rootView.findViewById(R.id.checkedoverlay);
+    final View notifyIcon = rootView.findViewById(R.id.notify_icon);
     colorList = (LinearLayout) rootView.findViewById(R.id.color_list);
     dayList = (LinearLayout) rootView.findViewById(R.id.day_list);
     dayTextList = (LinearLayout) rootView.findViewById(R.id.days_selected);
+    submitForm = (LinearLayout) rootView.findViewById(R.id.buttons_item);
     initializeColorList(colorList);
     checkBig = rootView.findViewById(R.id.checkbig);
     checkBigShadow = rootView.findViewById(R.id.checkbigshadow);
     checkSmall = rootView.findViewById(R.id.checksmall);
     checkSmallShadow = rootView.findViewById(R.id.checksmallshadow);
     topLevelLayout.setBackground(mBackground);
-    String name = mBundle.getString(PACKAGE+".name");
-    final int itemTop = mBundle.getInt(PACKAGE+".top");
-    final int itemLeft = mBundle.getInt(PACKAGE+".left");
-    final int mainColor = mBundle.getInt(PACKAGE+".mainColor");
-    final int shadowColor = mBundle.getInt(PACKAGE+".shadowColor");
-    final boolean[] isDone = {mBundle.getBoolean(PACKAGE + ".done")};
-    boolean[] temp = mBundle.getBooleanArray(PACKAGE+".daysChecked");
-    shouldNotify = mBundle.getBoolean(PACKAGE+".notify");
-    for(int i = 0; i < temp.length; i++) {
+    String name = mBundle.getString(PACKAGE + ".name");
+    final int itemTop = mBundle.getInt(PACKAGE + ".top");
+    final int itemLeft = mBundle.getInt(PACKAGE + ".left");
+    final int mainColor = mBundle.getInt(PACKAGE + ".mainColor");
+    final int shadowColor = mBundle.getInt(PACKAGE + ".shadowColor");
+    isDone = new boolean[]{mBundle.getBoolean(PACKAGE + ".done")};
+    boolean[] temp = mBundle.getBooleanArray(PACKAGE + ".daysChecked");
+    shouldNotify = mBundle.getBoolean(PACKAGE + ".notify");
+    for (int i = 0; i < temp.length; i++) {
       daysChecked.set(i, temp[i]);
     }
     clickedColorID = mainColor;
     initializeDayList(dayList, dayTextList);
     updateDayListColor();
-    listItemNumber = mBundle.getInt(PACKAGE+".itemNumber");
+    listItemNumber = mBundle.getInt(PACKAGE + ".itemNumber");
     int setColor = getColorNum(mainColor);
+    int saveDrawableColor = getSaveButtonDrawable(mainColor);
     if (setColor != selectedColor) {
       if (selectedColor != 0) {
-        colorList.getChildAt(selectedColor-1).findViewById(R.id.selected_box).
+        colorList.getChildAt(selectedColor - 1).findViewById(R.id.selected_box).
           setBackgroundColor(getResources().getColor(R.color.background));
       }
-      colorList.getChildAt(setColor-1).findViewById(R.id.selected_box).
+      colorList.getChildAt(setColor - 1).findViewById(R.id.selected_box).
         setBackgroundColor(getResources().getColor(R.color.checkboxbg));
       selectedColor = setColor;
     }
@@ -388,9 +432,17 @@ public class EditTaskDialog extends DialogFragment {
       @Override
       public void afterTextChanged(Editable editable) {
         nameView.setText(nameEnter.getText());
-        mAdapter.getItem(listItemNumber).setName(nameEnter.getText().toString());
+        //mAdapter.getItem(listItemNumber).setName(nameEnter.getText().toString());
       }
     });
+    if (shouldNotify) {
+      notifyForm.findViewById(R.id.notify_box_inside).setBackgroundColor(
+        getResources().getColor(clickedColorID)
+      );
+      notifyIcon.setAlpha(1);
+    } else {
+      notifyIcon.setAlpha(0.33f);
+    }
     notifyForm.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -399,10 +451,12 @@ public class EditTaskDialog extends DialogFragment {
           notifyForm.findViewById(R.id.notify_box_inside).setBackgroundColor(
             getResources().getColor(clickedColorID)
           );
+          notifyIcon.setAlpha(1);
         } else {
           notifyForm.findViewById(R.id.notify_box_inside).setBackgroundColor(
             getResources().getColor(R.color.background)
           );
+          notifyIcon.setAlpha(0.25f);
         }
       }
     });
@@ -410,10 +464,14 @@ public class EditTaskDialog extends DialogFragment {
     checkShadow2 = rootView.findViewById(R.id.checklistright);
     mainShadow1 = rootView.findViewById(R.id.mainviewbottom);
     mainShadow2 = rootView.findViewById(R.id.mainviewright);
+    saveButton = (Button) rootView.findViewById(R.id.save_button);
+    cancelButton = (Button) rootView.findViewById(R.id.cancel_button);
     checkShadow1.setBackgroundColor(getResources().getColor(shadowColor));
     checkShadow2.setBackgroundColor(getResources().getColor(shadowColor));
     mainShadow1.setBackgroundColor(getResources().getColor(shadowColor));
     mainShadow2.setBackgroundColor(getResources().getColor(shadowColor));
+    saveButton.setBackground(getResources().getDrawable(saveDrawableColor));
+    cancelButton.setBackground(getResources().getDrawable(R.drawable.cancel_button));
     checkBigShadow.setBackgroundColor(getResources().getColor(shadowColor));
     checkSmallShadow.setBackgroundColor(getResources().getColor(shadowColor));
     mainBox = rootView.findViewById(R.id.mainview);
@@ -429,7 +487,7 @@ public class EditTaskDialog extends DialogFragment {
     }
     View checkBox = rootView.findViewById(R.id.checkboxview);
     checkBox.setTag(listItemNumber);
-    checkBox.setOnClickListener(new View.OnClickListener(){
+    checkBox.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         isDone[0] = !isDone[0];
@@ -440,12 +498,36 @@ public class EditTaskDialog extends DialogFragment {
           checked.setVisibility(View.GONE);
           checkedOverlay.setVisibility(View.GONE);
         }
-        mAdapter.getItem(listItemNumber).setDone(isDone[0]);
+        //mAdapter.getItem(listItemNumber).setDone(isDone[0]);
+      }
+    });
+    cancelButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        runExitAnimation(new Runnable() {
+          @Override
+          public void run() {
+            dialog.cancel();
+          }
+        });
+      }
+    });
+    saveButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        changeData();
+        mAdapter.notifyDataSetChanged();
+        runExitAnimation(new Runnable() {
+          @Override
+          public void run() {
+            dialog.cancel();
+          }
+        });
       }
     });
     if (savedInstanceState == null) {
       ViewTreeObserver observer = checkListItem.getViewTreeObserver();
-      observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener(){
+      observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 
         @Override
         public boolean onPreDraw() {
@@ -480,6 +562,8 @@ public class EditTaskDialog extends DialogFragment {
     dayForm.setScaleY(.25f);
     notifyForm.setAlpha(0);
     notifyForm.setScaleY(.25f);
+    submitForm.setAlpha(0);
+    submitForm.setScaleY(.25f);
     mAdapter.hideItem(listItemNumber);
     checkListItem.animate().setDuration(duration).
       translationX(0).translationY(0).
@@ -498,7 +582,7 @@ public class EditTaskDialog extends DialogFragment {
               public void run() {
                 colorForm.setTranslationY(-colorForm.getHeight());
                 colorForm.animate().
-                  setDuration(duration/2).
+                  setDuration(duration / 2).
                   scaleY(1f).
                   translationY(0).
                   alpha(1).
@@ -508,7 +592,7 @@ public class EditTaskDialog extends DialogFragment {
                     public void run() {
                       dayForm.setTranslationY(-dayForm.getHeight());
                       dayForm.animate().
-                        setDuration(duration/2).
+                        setDuration(duration / 2).
                         scaleY(1f).
                         translationY(0).
                         alpha(1).
@@ -518,11 +602,23 @@ public class EditTaskDialog extends DialogFragment {
                           public void run() {
                             notifyForm.setTranslationY(-notifyForm.getHeight());
                             notifyForm.animate().
-                              setDuration(duration/2).
+                              setDuration(duration / 2).
                               scaleY(1f).
                               translationY(0).
                               alpha(1).
-                              setInterpolator(sDecelerator);
+                              setInterpolator(sDecelerator).
+                              withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                  submitForm.setTranslationY(-submitForm.getHeight());
+                                  submitForm.animate().
+                                    setDuration(duration / 2).
+                                    scaleY(1f).
+                                    translationY(0).
+                                    alpha(1).
+                                    setInterpolator(sDecelerator);
+                                }
+                              });
                           }
                         });
                     }
@@ -539,45 +635,51 @@ public class EditTaskDialog extends DialogFragment {
 
   public void runExitAnimation(final Runnable endAction) {
     final long duration = (long) (ANIM_DURATION);
-    notifyForm.animate().translationY(-notifyForm.getHeight()).scaleY(.25f).alpha(0).
-      setDuration(duration/2).setInterpolator(sAccelerator).withEndAction(new Runnable() {
+    submitForm.animate().translationY(-submitForm.getHeight()).scaleY(.25f).alpha(0).
+      setDuration(duration / 2).setInterpolator(sAccelerator).withEndAction(new Runnable() {
       @Override
       public void run() {
-
-        dayForm.animate().translationY(-dayForm.getHeight()).scaleY(.25f).alpha(0).
-          setDuration(duration/2).setInterpolator(sAccelerator).withEndAction(new Runnable() {
+        notifyForm.animate().translationY(-notifyForm.getHeight()).scaleY(.25f).alpha(0).
+          setDuration(duration / 2).setInterpolator(sAccelerator).withEndAction(new Runnable() {
           @Override
           public void run() {
-            colorForm.animate().translationY(-colorForm.getHeight()).scaleY(.25f).alpha(0).
-              setDuration(duration/2).setInterpolator(sAccelerator).withEndAction(new Runnable() {
+            dayForm.animate().translationY(-dayForm.getHeight()).scaleY(.25f).alpha(0).
+              setDuration(duration / 2).setInterpolator(sAccelerator).withEndAction(new Runnable() {
               @Override
               public void run() {
-                nameForm.animate().translationY(-nameForm.getHeight()).scaleY(.25f).
-                  alpha(0).setDuration(duration/2).setInterpolator(sAccelerator).
-                  withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                      checkListItem.animate().setDuration(duration).
-                        translationY(mLeftDelta).translationY(mTopDelta).
-                        withEndAction(new Runnable() {
-                          @Override
-                          public void run() {
-                            mAdapter.revealItem(listItemNumber);
-                            nameForm.animate().setDuration(10).alpha(0).setInterpolator(sAccelerator).withEndAction(endAction);
-                          }
-                        });
+                colorForm.animate().translationY(-colorForm.getHeight()).scaleY(.25f).alpha(0).
+                  setDuration(duration / 2).setInterpolator(sAccelerator).withEndAction(new Runnable() {
+                  @Override
+                  public void run() {
+                    nameForm.animate().translationY(-nameForm.getHeight()).scaleY(.25f).
+                      alpha(0).setDuration(duration / 2).setInterpolator(sAccelerator).
+                      withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                          checkListItem.animate().setDuration(duration).
+                            translationY(mLeftDelta).translationY(mTopDelta).
+                            withEndAction(new Runnable() {
+                              @Override
+                              public void run() {
+                                mAdapter.revealItem(listItemNumber);
+                                nameForm.animate().setDuration(10).alpha(0).setInterpolator(sAccelerator).withEndAction(endAction);
+                              }
+                            });
 
-                      ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
-                      bgAnim.setDuration(duration);
-                      bgAnim.start();
+                          ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
+                          bgAnim.setDuration(duration);
+                          bgAnim.start();
 
-                    }
-                  });
+                        }
+                      });
+                  }
+                });
               }
             });
           }
         });
       }
     });
+
   }
 }

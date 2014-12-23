@@ -7,13 +7,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 /**
  * Created by gsajith on 10/19/2014.
  */
-public class TitleActivity  extends Activity {
+public class TitleActivity extends Activity {
 
   private ImageView mImageView;
 
@@ -22,8 +21,8 @@ public class TitleActivity  extends Activity {
     super.onCreate(savedInstanceState);    //Remove title bar
     this.requestWindowFeature(Window.FEATURE_NO_TITLE);
     //Remove notification bar
-    this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-      WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+    //  WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
     setContentView(R.layout.activity_title);
   }
@@ -34,19 +33,16 @@ public class TitleActivity  extends Activity {
     Intent intent = new Intent(this, MainListActivity.class);
     startActivity(intent);
   }
+
   @Override
-  protected void onResume()
-  {
+  protected void onResume() {
     super.onResume();
     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
     // Obtain the sharedPreference, default to true if not available
     boolean isSplashEnabled = sp.getBoolean("isSplashEnabled", true);
 
-    if (isSplashEnabled)
-    {
-    }
-    else
-    {
+    if (isSplashEnabled) {
+    } else {
       // if the splash is not enabled, then finish the activity immediately and go to main.
       finish();
       Intent mainIntent = new Intent(TitleActivity.this, MainListActivity.class);

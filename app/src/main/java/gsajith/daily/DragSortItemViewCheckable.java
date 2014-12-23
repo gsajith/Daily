@@ -1,8 +1,8 @@
 package gsajith.daily;
 
-  import android.content.Context;
-  import android.view.View;
-  import android.widget.Checkable;
+import android.content.Context;
+import android.view.View;
+import android.widget.Checkable;
 
 /**
  * Lightweight ViewGroup that wraps list items obtained from user's
@@ -14,8 +14,8 @@ package gsajith.daily;
  * to the child, and the ItemView measured width is set to the
  * child's measured width). The height of ItemView can be anything;
  * the
- *
- *
+ * <p/>
+ * <p/>
  * The purpose of this class is to optimize slide
  * shuffle animations.
  */

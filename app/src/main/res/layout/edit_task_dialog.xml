@@ -13,16 +13,47 @@
         android:layout_marginRight="6dp"
         android:layout_marginLeft="6dp"
         android:gravity="center">
+                <LinearLayout
+                    android:id="@+id/buttons_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:background="@color/transparent"
+                    android:layout_marginTop="170dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    >
+                    <Button
+                        android:id="@+id/save_button"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight=".5"
+                        android:background="@color/red"
+                        android:text="SAVE"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:gravity="center"/>
+                    <Button
+                        android:id="@+id/cancel_button"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight=".5"
+                        android:textColor="@color/darkgrey"
+                        android:text="CANCEL"
+                        android:textSize="22sp"
+                        android:gravity="center"
+                        android:background="@drawable/cancel_button"/>
+                    </LinearLayout>
                 <RelativeLayout
                     android:id="@+id/notify_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/background"
                     android:orientation="vertical"
-                    android:layout_marginTop="123dp"
+                    android:layout_marginTop="125dp"
                     android:layout_gravity="center_vertical"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="3dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="5dp"
                     android:gravity="center">
                     <View
                         android:id="@+id/notify_box_border"

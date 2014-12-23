@@ -40,7 +40,6 @@
         android:layout_toRightOf="@id/midmargin"
         android:background="@color/red">
 
-
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -48,6 +47,18 @@
             android:id="@+id/editbutton"
             android:background="@drawable/edit_click_overlay"/>
 
+
+        <ImageView
+            android:id="@+id/notify_icon"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="11dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:src="@drawable/bellicon"
+            android:alpha="0.25"
+            android:layout_gravity="right"/>
         <TextView
             android:id="@+id/nameText"
             android:layout_width="match_parent"
@@ -240,7 +251,6 @@
                 android:background="@color/draghandle"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
-
     </FrameLayout>
     <View
         android:id="@+id/checkedoverlay"
@@ -285,6 +295,7 @@
             android:layout_marginTop="28dp"
             android:background="@color/lightblue"
             android:rotation="90"/>
+
     </FrameLayout>
 
 

@@ -16,7 +16,6 @@
 
     <style name="TitleTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ActionBar</item>
-        <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@color/lightblue</item>
     </style>
