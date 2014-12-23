@@ -25,36 +25,27 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginRight="100dp"
-            android:layout_marginLeft="100dp"
             android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
             android:layout_below="@id/empty_cat"
+            android:background="@color/orangeshadow"
             android:id="@+id/frameLayout">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingRight="8dp"
-                android:paddingLeft="0dp"
+                android:paddingRight="18dp"
+                android:paddingLeft="10dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
                 android:clickable="true"
                 android:text="+  Add it now!"
                 android:textColor="#ffffff"
                 android:gravity="center"
+                android:layout_gravity="center"
                 android:onClick="addTask"
                 android:textSize="20sp"
                 android:background="@drawable/create_button"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_gravity="center_horizontal|bottom"
-                android:background="@color/orangeshadow"
-                />
 
-            <View
-                android:layout_width="3dp"
-                android:layout_height="60dp"
-                android:layout_gravity="right|bottom"
-                android:background="@color/orangeshadow"
-                />
 
             </FrameLayout>
     </RelativeLayout>
