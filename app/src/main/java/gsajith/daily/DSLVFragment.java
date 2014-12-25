@@ -1,6 +1,9 @@
 package gsajith.daily;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,12 +15,18 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DSLVFragment extends ListFragment {
   private static final SecureRandom random = new SecureRandom();
@@ -30,6 +39,7 @@ public class DSLVFragment extends ListFragment {
   private ArrayList<ListItemModel> list;
   private Stack<Pair<ListItemModel, Integer>> undoStack;
   private List<Boolean> daysEnabled;
+  private HashMap<String, String> alarmMap;
   private DragSortListView.DropListener onDrop =
     new DragSortListView.DropListener() {
       @Override
@@ -91,6 +101,16 @@ public class DSLVFragment extends ListFragment {
     SharedPreferences prefs = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
     SharedPreferences.Editor e = prefs.edit();
     e.putString("list", value);
+    e.commit();
+  }
+
+  public void updateAlarms() {
+    GsonBuilder gsonb = new GsonBuilder();
+    Gson gson = gsonb.create();
+    String value = gson.toJson(alarmMap);
+    SharedPreferences prefs = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
+    SharedPreferences.Editor e = prefs.edit();
+    e.putString("alarms", value);
     e.commit();
   }
 
@@ -167,17 +187,32 @@ public class DSLVFragment extends ListFragment {
       Gson gson = gsonb.create();
       list.addAll(Arrays.asList(gson.fromJson(value, ListItemModel[].class)));
     }
-
+    value = prefs.getString("alarms", null);
+    if (value != null) {
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      alarmMap = gson.fromJson(value, new TypeToken<Map<String, String>>(){}.getType());
+    }
     for (int i = 0; i < list.size(); i++) {
       list.get(i).setVisible(true);
     }
     adapter = new DragSortListAdapter(getActivity(), list, DSLVFragment.this);
+
     if (list.isEmpty()) {
       adapter.showEmptyPage(getActivity());
     } else {
       adapter.hideEmptyPage(getActivity());
     }
     setListAdapter(adapter);
+    Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+    PendingIntent alarmIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
+    AlarmManager alarmMgr = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+    Calendar cal = Calendar.getInstance();
+    cal.setTimeInMillis(System.currentTimeMillis());
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.MINUTE, 0);
+    alarmMgr.setInexactRepeating(AlarmManager.RTC, cal.getTimeInMillis(),
+      AlarmManager.INTERVAL_DAY, alarmIntent);
   }
 
   /**
